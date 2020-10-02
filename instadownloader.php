@@ -21,13 +21,20 @@ $url2 = file_get_contents("https://api.instagram.com/oembed/?url=$input");
 $data = json_decode($url2,true);
 
 // get link Media
-preg_match('|"display_url":"(.*)","display_resources"|', $url, $getLink);
+$getLink = json_decode($url);
+
+if(isset($getLink->graphql->shortcode_media->video_url)){
+    $fixedLink = $getLink->graphql->shortcode_media->video_url;
+}else{
+    $fixedLink = $getLink->graphql->shortcode_media->display_url;
+}
 
 echo "Post By : ";
 echo $data['author_name'] ."\n";
 echo "Caption : ";
 echo $data['title'] ."\n\n";
 
+
 // Response
-echo "Link To Download Image/Video : "; echo $getLink[1]."\n";
+echo "Link To Download Image/Video : "; echo $fixedLink."\n";
 ?>
